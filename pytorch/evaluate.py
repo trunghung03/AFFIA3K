@@ -1,34 +1,29 @@
 from sklearn import metrics
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, classification_report
 import numpy as np
-
 from pytorch.pytorch_utils import forward
 
 
 class Evaluator(object):
     def __init__(self, model):
         """Evaluator.
-
         Args:
           model: object
         """
         self.model = model
-        
+
     def evaluate(self, data_loader):
         """Forward evaluation data and calculate statistics.
-
         Args:
           data_loader: object
-
         Returns:
-          statistics: dict, 
+          statistics: dict,
               {'average_precision': (classes_num,), 'auc': (classes_num,)}
         """
-
         # Forward
         output_dict = forward(
-            model=self.model, 
-            generator=data_loader, 
+            model=self.model,
+            generator=data_loader,
             return_target=True)
 
         clipwise_output = output_dict['clipwise_output']    # (audios_num, classes_num)
@@ -36,13 +31,19 @@ class Evaluator(object):
 
         average_precision = metrics.average_precision_score(
             target, clipwise_output, average=None)
-
         auc = metrics.roc_auc_score(target, clipwise_output, average=None)
-        
+
         target_acc = np.argmax(target, axis=1)
         clipwise_output_acc = np.argmax(clipwise_output, axis=1)
         acc = accuracy_score(target_acc, clipwise_output_acc)
 
-        statistics = {'average_precision': average_precision, 'accuracy': acc, 'auc': auc}
+        # Build a readable per-class report string
+        message = classification_report(target_acc, clipwise_output_acc, zero_division=0)
 
+        statistics = {
+            'average_precision': average_precision,
+            'accuracy': acc,
+            'auc': auc,
+            'message': message
+        }
         return statistics
