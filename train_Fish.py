@@ -44,7 +44,7 @@ def train(model, train_loader, test_loader, epoch, device):
     for epoch in range(epoch):
         epoch = epoch + 1
 
-        loss_func = get_loss_func('clip_ce')
+        loss_func = get_loss_func('clip_bce')
 
         mean_loss = 0
         for data_dict in tqdm(train_loader):
