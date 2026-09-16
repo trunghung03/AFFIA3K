@@ -16,29 +16,19 @@ def load_audio(path, sr=None):
     y = resample(y, num=sr*2)
     return y
 
-# def get_wav_name(split='strong'):
-#     """
-#     params: str
-#         middle, none, strong, weak
-#     """
-#     path = '/vol/research/Fish_tracking_master/sound'
-#     wav_dir = os.path.join(path, split, '*', '*.wav')
-#     return glob.glob(wav_dir)
 def get_wav_name(split='strong'):
-    """
-    params: str
-        middle, none, strong, weak
-    """
-    path = os.environ.get('FISH_AUDIO_PATH', '/vol/research/Fish_tracking_master/fish_num/15')
+    path = os.environ.get('FISH_AUDIO_PATH', '/kaggle/input/datasets/hungnguyentrung/fishfeedingintensity/Fish_feeding_sounds')
     audio = []
     l1 = os.listdir(path)
     for dir in l1:
-        l2 = os.listdir(os.path.join(path, dir))
+        full_dir_path = os.path.join(path, dir)
+        if not os.path.isdir(full_dir_path):
+            continue  # skip files like best.pt
+        l2 = os.listdir(full_dir_path)
         for dir1 in l2:
             wav_dir = os.path.join(path, dir, dir1, split, '*.wav')
             audio.append(glob.glob(wav_dir))
     return list(chain.from_iterable(audio))
-
 
 def data_generator(seed=20, test_sample_per_class=100):
     """
