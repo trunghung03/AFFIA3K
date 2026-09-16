@@ -104,7 +104,7 @@ if __name__ == '__main__':
     parser.add_argument('--workspace', type=str, default='workspace')
     parser.add_argument('--exp_name', type=str, default='100_Cnn6')
     parser.add_argument('--model_type', type=str, default='Cnn6')
-    parser.add_argument('--batch_size', type=int, default=200)
+    parser.add_argument('--batch_size', type=int, default=300)
     parser.add_argument('--epoch', type=int, default=500)
     parser.add_argument('--learning_rate', type=float, default=1e-3)
     parser.add_argument('--sample_rate', type=int, default=128000)  # 16k, 32k, 44k, 64k, 128k
